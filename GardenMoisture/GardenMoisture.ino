@@ -296,6 +296,8 @@ void loop() {
     const bool shouldSleep = (millis() - connectedAtMs > 3000) || !Blynk.connected();
     if (shouldSleep) {
       enterDeepSleep();
+      // In debug mode (sleep disabled), avoid spamming sleep logs each loop.
+      reportedThisWake = false;
     }
   }
 }

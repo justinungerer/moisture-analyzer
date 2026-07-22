@@ -12,3 +12,6 @@
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local secrets note (keep private)
+LOCAL_SECRETS.md

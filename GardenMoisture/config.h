@@ -31,7 +31,7 @@
 #define BLYNK_EVENT_LOW_MOISTURE "low_moisture"
 
 // ── Power ──────────────────────────────────────────────────────────────────────
-#define ENABLE_DEEP_SLEEP false
+#define ENABLE_DEEP_SLEEP true
 #define DEFAULT_SLEEP_MINUTES 30     // wake every 30 minutes
 
 // 10000 mAh Li-ion (3.0 V cutoff → 4.2 V full)
