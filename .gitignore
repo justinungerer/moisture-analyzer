@@ -1,0 +1,14 @@
+# Arduino/ESP32 build outputs
+**/build/
+*.bin
+*.elf
+*.map
+*.hex
+
+# IDE/workspace noise
+**/.theia/
+**/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

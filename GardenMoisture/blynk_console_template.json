@@ -1,0 +1,46 @@
+{
+  "template": {
+    "id": "TMPL2c6XdcWxv",
+    "name": "Garden Moisture - 15 Zone",
+    "description": "Console-importable template for Garden Moisture Monitor (15 zones). Replace the template id with your TMPL... value.",
+    "firmware_type": "esp32",
+    "widgets": [
+      { "pin": "V0", "type": "value", "label": "Zone 1", "settings": { "unit": "%" } },
+      { "pin": "V1", "type": "value", "label": "Zone 2", "settings": { "unit": "%" } },
+      { "pin": "V2", "type": "value", "label": "Zone 3", "settings": { "unit": "%" } },
+      { "pin": "V3", "type": "value", "label": "Zone 4", "settings": { "unit": "%" } },
+      { "pin": "V4", "type": "value", "label": "Zone 5", "settings": { "unit": "%" } },
+      { "pin": "V5", "type": "value", "label": "Zone 6", "settings": { "unit": "%" } },
+      { "pin": "V6", "type": "value", "label": "Zone 7", "settings": { "unit": "%" } },
+      { "pin": "V7", "type": "value", "label": "Zone 8", "settings": { "unit": "%" } },
+      { "pin": "V8", "type": "value", "label": "Zone 9", "settings": { "unit": "%" } },
+      { "pin": "V9", "type": "value", "label": "Zone 10", "settings": { "unit": "%" } },
+      { "pin": "V10", "type": "value", "label": "Zone 11", "settings": { "unit": "%" } },
+      { "pin": "V11", "type": "value", "label": "Zone 12", "settings": { "unit": "%" } },
+      { "pin": "V12", "type": "value", "label": "Zone 13", "settings": { "unit": "%" } },
+      { "pin": "V13", "type": "value", "label": "Zone 14", "settings": { "unit": "%" } },
+      { "pin": "V14", "type": "value", "label": "Zone 15", "settings": { "unit": "%" } },
+
+      { "pin": "V15", "type": "gauge", "label": "Battery %", "settings": { "min": 0, "max": 100, "unit": "%" } },
+      { "pin": "V16", "type": "value", "label": "Sleep interval (min)", "settings": { } },
+      { "pin": "V17", "type": "slider", "label": "Alert threshold", "settings": { "min": 0, "max": 100, "step": 1 } },
+
+      { "pin": "V18", "type": "value", "label": "Cal dry raw", "settings": { } },
+      { "pin": "V19", "type": "value", "label": "Cal wet raw", "settings": { } },
+
+      { "pin": "V20", "type": "switch", "label": "Calibration mode", "settings": { "values": "0/1" } },
+      { "pin": "V21", "type": "slider", "label": "Calibration zone", "settings": { "min": 1, "max": 15, "step": 1 } },
+
+      { "pin": "V22", "type": "button", "label": "Capture dry", "settings": { "mode": "push", "value": 1 } },
+      { "pin": "V23", "type": "button", "label": "Capture wet", "settings": { "mode": "push", "value": 1 } },
+
+      { "pin": "V24", "type": "value", "label": "Live raw ADC", "settings": { } },
+
+      { "pin": "V25", "type": "value", "label": "WiFi RSSI (dBm)", "settings": { } },
+      { "pin": "V26", "type": "value", "label": "Last report / uptime", "settings": { } },
+      { "pin": "V27", "type": "value", "label": "Last error / state", "settings": { } }
+    ],
+
+    "import_notes": "Blynk Console supports template import in some accounts/versions. If the console rejects this file, use it as a mapping to add widgets manually in the template editor. Replace 'TMPL_REPLACE_ME' with your actual Template ID."
+  }
+}

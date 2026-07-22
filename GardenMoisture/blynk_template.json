@@ -1,0 +1,45 @@
+{
+  "template_name": "Garden Moisture - 15 Zone",
+  "template_id": "TMPL2c6XdcWxv",
+  "description": "Blynk template for Garden Moisture Monitor (15 zones). Replace template_id with your TMPL... ID when creating the template in Blynk Console.",
+  "widgets": [
+    { "pin": "V0", "type": "Value", "label": "Zone 1" },
+    { "pin": "V1", "type": "Value", "label": "Zone 2" },
+    { "pin": "V2", "type": "Value", "label": "Zone 3" },
+    { "pin": "V3", "type": "Value", "label": "Zone 4" },
+    { "pin": "V4", "type": "Value", "label": "Zone 5" },
+    { "pin": "V5", "type": "Value", "label": "Zone 6" },
+    { "pin": "V6", "type": "Value", "label": "Zone 7" },
+    { "pin": "V7", "type": "Value", "label": "Zone 8" },
+    { "pin": "V8", "type": "Value", "label": "Zone 9" },
+    { "pin": "V9", "type": "Value", "label": "Zone 10" },
+    { "pin": "V10", "type": "Value", "label": "Zone 11" },
+    { "pin": "V11", "type": "Value", "label": "Zone 12" },
+    { "pin": "V12", "type": "Value", "label": "Zone 13" },
+    { "pin": "V13", "type": "Value", "label": "Zone 14" },
+    { "pin": "V14", "type": "Value", "label": "Zone 15" },
+
+    { "pin": "V15", "type": "Gauge", "label": "Battery %", "min": 0, "max": 100 },
+    { "pin": "V16", "type": "Value", "label": "Sleep interval (min)" },
+    { "pin": "V17", "type": "Slider", "label": "Alert threshold", "min": 0, "max": 100, "step": 1 },
+
+    { "pin": "V18", "type": "Value", "label": "Cal dry raw" },
+    { "pin": "V19", "type": "Value", "label": "Cal wet raw" },
+
+    { "pin": "V20", "type": "Switch", "label": "Calibration mode", "values": "0/1" },
+    { "pin": "V21", "type": "Slider", "label": "Calibration zone", "min": 1, "max": 15, "step": 1 },
+
+    { "pin": "V22", "type": "Button", "label": "Capture dry", "mode": "push", "value": 1 },
+    { "pin": "V23", "type": "Button", "label": "Capture wet", "mode": "push", "value": 1 },
+
+    { "pin": "V24", "type": "Value", "label": "Live raw ADC" }
+  ],
+
+  "diagnostics": [
+    { "pin": "V25", "type": "Value", "label": "WiFi RSSI (dBm)" },
+    { "pin": "V26", "type": "Value", "label": "Last report / uptime" },
+    { "pin": "V27", "type": "Value", "label": "Last error / state" }
+  ],
+
+  "notes": "This JSON is a widget mapping you can follow to recreate the dashboard in Blynk Cloud or the mobile app. Blynk Cloud's console may not accept direct JSON imports for widgets — use the mobile app or the Console template editor to add widgets using the entries above. Replace `template_id` with the TMPL ID from your Blynk Console."
+}
