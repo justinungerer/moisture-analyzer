@@ -2,45 +2,98 @@
   "template": {
     "id": "TMPL2c6XdcWxv",
     "name": "Garden Moisture - 15 Zone",
-    "description": "Console-importable template for Garden Moisture Monitor (15 zones). Replace the template id with your TMPL... value.",
+    "description": "Web dashboard blueprint for Garden Moisture Monitor (15 zones). Use this as the source of truth when creating datastreams and widgets in Blynk Console.",
     "firmware_type": "esp32",
-    "widgets": [
-      { "pin": "V0", "type": "value", "label": "Zone 1", "settings": { "unit": "%" } },
-      { "pin": "V1", "type": "value", "label": "Zone 2", "settings": { "unit": "%" } },
-      { "pin": "V2", "type": "value", "label": "Zone 3", "settings": { "unit": "%" } },
-      { "pin": "V3", "type": "value", "label": "Zone 4", "settings": { "unit": "%" } },
-      { "pin": "V4", "type": "value", "label": "Zone 5", "settings": { "unit": "%" } },
-      { "pin": "V5", "type": "value", "label": "Zone 6", "settings": { "unit": "%" } },
-      { "pin": "V6", "type": "value", "label": "Zone 7", "settings": { "unit": "%" } },
-      { "pin": "V7", "type": "value", "label": "Zone 8", "settings": { "unit": "%" } },
-      { "pin": "V8", "type": "value", "label": "Zone 9", "settings": { "unit": "%" } },
-      { "pin": "V9", "type": "value", "label": "Zone 10", "settings": { "unit": "%" } },
-      { "pin": "V10", "type": "value", "label": "Zone 11", "settings": { "unit": "%" } },
-      { "pin": "V11", "type": "value", "label": "Zone 12", "settings": { "unit": "%" } },
-      { "pin": "V12", "type": "value", "label": "Zone 13", "settings": { "unit": "%" } },
-      { "pin": "V13", "type": "value", "label": "Zone 14", "settings": { "unit": "%" } },
-      { "pin": "V14", "type": "value", "label": "Zone 15", "settings": { "unit": "%" } },
-
-      { "pin": "V15", "type": "gauge", "label": "Battery %", "settings": { "min": 0, "max": 100, "unit": "%" } },
-      { "pin": "V16", "type": "value", "label": "Sleep interval (min)", "settings": { } },
-      { "pin": "V17", "type": "slider", "label": "Alert threshold", "settings": { "min": 0, "max": 100, "step": 1 } },
-
-      { "pin": "V18", "type": "value", "label": "Cal dry raw", "settings": { } },
-      { "pin": "V19", "type": "value", "label": "Cal wet raw", "settings": { } },
-
-      { "pin": "V20", "type": "switch", "label": "Calibration mode", "settings": { "values": "0/1" } },
-      { "pin": "V21", "type": "slider", "label": "Calibration zone", "settings": { "min": 1, "max": 15, "step": 1 } },
-
-      { "pin": "V22", "type": "button", "label": "Capture dry", "settings": { "mode": "push", "value": 1 } },
-      { "pin": "V23", "type": "button", "label": "Capture wet", "settings": { "mode": "push", "value": 1 } },
-
-      { "pin": "V24", "type": "value", "label": "Live raw ADC", "settings": { } },
-
-      { "pin": "V25", "type": "value", "label": "WiFi RSSI (dBm)", "settings": { } },
-      { "pin": "V26", "type": "value", "label": "Last report / uptime", "settings": { } },
-      { "pin": "V27", "type": "value", "label": "Last error / state", "settings": { } }
+    "events": [
+      {
+        "code": "low_moisture",
+        "name": "Low moisture",
+        "description": "Sent when any zone drops below threshold"
+      }
     ],
-
-    "import_notes": "Blynk Console supports template import in some accounts/versions. If the console rejects this file, use it as a mapping to add widgets manually in the template editor. Replace 'TMPL_REPLACE_ME' with your actual Template ID."
+    "datastreams": [
+      { "pin": "V0", "name": "Zone 1", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V1", "name": "Zone 2", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V2", "name": "Zone 3", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V3", "name": "Zone 4", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V4", "name": "Zone 5", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V5", "name": "Zone 6", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V6", "name": "Zone 7", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V7", "name": "Zone 8", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V8", "name": "Zone 9", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V9", "name": "Zone 10", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V10", "name": "Zone 11", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V11", "name": "Zone 12", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V12", "name": "Zone 13", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V13", "name": "Zone 14", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V14", "name": "Zone 15", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V15", "name": "Battery", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V16", "name": "Sleep minutes", "data_type": "integer", "direction": "cloud_to_device", "min": 5, "max": 1440, "unit": "min" },
+      { "pin": "V17", "name": "Alert threshold", "data_type": "integer", "direction": "cloud_to_device", "min": 0, "max": 100, "unit": "%" },
+      { "pin": "V18", "name": "Calibration dry raw", "data_type": "integer", "direction": "cloud_and_device", "min": 0, "max": 4095 },
+      { "pin": "V19", "name": "Calibration wet raw", "data_type": "integer", "direction": "cloud_and_device", "min": 0, "max": 4095 },
+      { "pin": "V20", "name": "Calibration mode", "data_type": "integer", "direction": "cloud_and_device", "min": 0, "max": 1 },
+      { "pin": "V21", "name": "Calibration zone", "data_type": "integer", "direction": "cloud_and_device", "min": 1, "max": 15 },
+      { "pin": "V22", "name": "Capture dry", "data_type": "integer", "direction": "cloud_to_device", "min": 0, "max": 1 },
+      { "pin": "V23", "name": "Capture wet", "data_type": "integer", "direction": "cloud_to_device", "min": 0, "max": 1 },
+      { "pin": "V24", "name": "Live raw", "data_type": "integer", "direction": "device_to_cloud", "min": 0, "max": 4095 },
+      { "pin": "V25", "name": "WiFi RSSI", "data_type": "integer", "direction": "device_to_cloud", "min": -120, "max": 0, "unit": "dBm" },
+      { "pin": "V26", "name": "Last report", "data_type": "string", "direction": "device_to_cloud" },
+      { "pin": "V27", "name": "Last error", "data_type": "string", "direction": "device_to_cloud" }
+    ],
+    "web_dashboard": {
+      "name": "Garden Moisture Web",
+      "sections": [
+        {
+          "title": "Overview",
+          "widgets": [
+            { "type": "gauge", "label": "Battery", "pin": "V15", "settings": { "min": 0, "max": 100, "unit": "%" } },
+            { "type": "slider", "label": "Alert threshold", "pin": "V17", "settings": { "min": 0, "max": 100, "step": 1 } },
+            { "type": "numeric_input", "label": "Sleep minutes", "pin": "V16", "settings": { "min": 5, "max": 1440 } },
+            { "type": "switch", "label": "Calibration mode", "pin": "V20", "settings": { "off": 0, "on": 1 } }
+          ]
+        },
+        {
+          "title": "Zones",
+          "widgets": [
+            { "type": "value", "label": "Zone 1", "pin": "V0", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 2", "pin": "V1", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 3", "pin": "V2", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 4", "pin": "V3", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 5", "pin": "V4", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 6", "pin": "V5", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 7", "pin": "V6", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 8", "pin": "V7", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 9", "pin": "V8", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 10", "pin": "V9", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 11", "pin": "V10", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 12", "pin": "V11", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 13", "pin": "V12", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 14", "pin": "V13", "settings": { "unit": "%" } },
+            { "type": "value", "label": "Zone 15", "pin": "V14", "settings": { "unit": "%" } }
+          ]
+        },
+        {
+          "title": "Calibration",
+          "widgets": [
+            { "type": "slider", "label": "Calibration zone", "pin": "V21", "settings": { "min": 1, "max": 15, "step": 1 } },
+            { "type": "value", "label": "Live raw ADC", "pin": "V24" },
+            { "type": "value", "label": "Dry raw", "pin": "V18" },
+            { "type": "value", "label": "Wet raw", "pin": "V19" },
+            { "type": "button", "label": "Capture dry", "pin": "V22", "settings": { "mode": "push", "value": 1 } },
+            { "type": "button", "label": "Capture wet", "pin": "V23", "settings": { "mode": "push", "value": 1 } }
+          ]
+        },
+        {
+          "title": "Diagnostics",
+          "widgets": [
+            { "type": "value", "label": "WiFi RSSI", "pin": "V25", "settings": { "unit": "dBm" } },
+            { "type": "value", "label": "Last report", "pin": "V26" },
+            { "type": "value", "label": "Last error", "pin": "V27" }
+          ]
+        }
+      ]
+    },
+    "import_notes": "If your Blynk Console account does not support JSON template import, create datastreams and widgets manually using this file as a blueprint."
   }
 }
