@@ -86,6 +86,12 @@ protected:
 #elif defined(BOARD_LED_PIN_R)     // Normal RGB LED (common anode or common cathode)
 
   void initLED() {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+    // Core 3.x: pin-based LEDC API (channels are auto-assigned).
+    ledcAttach(BOARD_LED_PIN_R, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
+    ledcAttach(BOARD_LED_PIN_G, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
+    ledcAttach(BOARD_LED_PIN_B, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
+#else
     ledcAttachPin(BOARD_LED_PIN_R, BOARD_LEDC_CHANNEL_1);
     ledcAttachPin(BOARD_LED_PIN_G, BOARD_LEDC_CHANNEL_2);
     ledcAttachPin(BOARD_LED_PIN_B, BOARD_LEDC_CHANNEL_3);
@@ -93,6 +99,7 @@ protected:
     ledcSetup(BOARD_LEDC_CHANNEL_1, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
     ledcSetup(BOARD_LEDC_CHANNEL_2, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
     ledcSetup(BOARD_LEDC_CHANNEL_3, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
+#endif
   }
 
   void setRGB(uint32_t color) {
@@ -100,29 +107,39 @@ protected:
     uint8_t g = (color & 0x00FF00) >> 8;
     uint8_t b = (color & 0x0000FF);
     #if BOARD_LED_INVERSE
-    ledcWrite(BOARD_LEDC_CHANNEL_1, TO_PWM(255 - r));
-    ledcWrite(BOARD_LEDC_CHANNEL_2, TO_PWM(255 - g));
-    ledcWrite(BOARD_LEDC_CHANNEL_3, TO_PWM(255 - b));
-    #else
+    r = 255 - r; g = 255 - g; b = 255 - b;
+    #endif
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+    ledcWrite(BOARD_LED_PIN_R, TO_PWM(r));
+    ledcWrite(BOARD_LED_PIN_G, TO_PWM(g));
+    ledcWrite(BOARD_LED_PIN_B, TO_PWM(b));
+#else
     ledcWrite(BOARD_LEDC_CHANNEL_1, TO_PWM(r));
     ledcWrite(BOARD_LEDC_CHANNEL_2, TO_PWM(g));
     ledcWrite(BOARD_LEDC_CHANNEL_3, TO_PWM(b));
-    #endif
+#endif
   }
 
 #elif defined(BOARD_LED_PIN)       // Single color LED
 
   void initLED() {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+    ledcAttach(BOARD_LED_PIN, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
+#else
     ledcSetup(BOARD_LEDC_CHANNEL_1, BOARD_LEDC_BASE_FREQ, BOARD_LEDC_TIMER_BITS);
     ledcAttachPin(BOARD_LED_PIN, BOARD_LEDC_CHANNEL_1);
+#endif
   }
 
   void setLED(uint32_t color) {
     #if BOARD_LED_INVERSE
-    ledcWrite(BOARD_LEDC_CHANNEL_1, TO_PWM(255 - color));
-    #else
-    ledcWrite(BOARD_LEDC_CHANNEL_1, TO_PWM(color));
+    color = 255 - color;
     #endif
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+    ledcWrite(BOARD_LED_PIN, TO_PWM(color));
+#else
+    ledcWrite(BOARD_LEDC_CHANNEL_1, TO_PWM(color));
+#endif
   }
 
 #else

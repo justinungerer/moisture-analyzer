@@ -6,6 +6,7 @@
 
 // RTC memory survives deep sleep; Preferences survives power loss.
 RTC_DATA_ATTR uint32_t lastAlertDayKey[SENSOR_COUNT] = {0};
+RTC_DATA_ATTR uint32_t lastBattAlertDayKey = 0;
 
 inline uint32_t currentLocalDayKey() {
   struct tm timeinfo;
@@ -43,6 +44,11 @@ inline void alertsLoadFromFlash() {
     if (stored > lastAlertDayKey[i]) {
       lastAlertDayKey[i] = stored;
     }
+  }
+
+  const uint32_t battStored = prefs.getUInt("battAlertDay", 0);
+  if (battStored > lastBattAlertDayKey) {
+    lastBattAlertDayKey = battStored;
   }
 
   prefs.end();
@@ -85,4 +91,27 @@ inline void markAlertSentToday(int zoneIndex) {
 
   lastAlertDayKey[zoneIndex] = today;
   alertsSaveZone(zoneIndex);
+}
+
+inline bool canBattAlertToday() {
+  const uint32_t today = currentLocalDayKey();
+  if (today == 0) {
+    return false;  // time not synced — skip rather than spam
+  }
+  return lastBattAlertDayKey != today;
+}
+
+inline void markBattAlertSentToday() {
+  const uint32_t today = currentLocalDayKey();
+  if (today == 0) {
+    return;
+  }
+  lastBattAlertDayKey = today;
+
+  Preferences prefs;
+  if (!prefs.begin("garden", false)) {
+    return;
+  }
+  prefs.putUInt("battAlertDay", lastBattAlertDayKey);
+  prefs.end();
 }

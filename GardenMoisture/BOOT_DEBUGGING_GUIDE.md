@@ -72,15 +72,16 @@ Fix implemented:
 
 ## 5) Minimal debug markers that worked
 
-Useful markers in `setup()`:
-- `STEP 1: analogReadResolution`
-- `STEP 2: calibrationLoad`
-- `STEP 3: alertsLoadFromFlash`
-- `STEP 4: set defaults`
-- `STEP 5: sensorsBegin`
-- `STEP 7: BlynkEdgent.begin`
+Useful markers in `setup()` (current v1.3.0 order):
+- `STEP 1: calibrationLoad` (loads all persistent settings)
+- `STEP 2: alertsLoadFromFlash`
+- `STEP 3: sensorsBegin` (also sets ADC resolution + 11 dB attenuation)
+- `STEP 4: applyHomeWifiProvisioning`
+- `STEP 5: BlynkEdgent.begin`
 
-When crash occurs, last printed marker identifies failing stage.
+When crash occurs, last printed marker identifies failing stage. Note that ADC
+resolution/attenuation is now configured inside `sensorsBegin()` rather than as
+a separate early step.
 
 ## 6) Why Serial looked blank earlier
 
