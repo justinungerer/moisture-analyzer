@@ -11,7 +11,7 @@ Battery-powered garden soil monitor using an **Arduino Nano ESP32**, **15 moistu
 |------|-----|-------|
 | Arduino Nano ESP32 | 1 | ABX00083 |
 | Capacitive soil moisture sensors | 15 | Prefer capacitive over resistive (less corrosion) |
-| CD4051 analog multiplexer | 2 | 8 channels each → 16 total (use 15) |
+| CD74HC4067 analog multiplexer | 1 | 16 channels total (use 15) |
 | LiPo battery | 1 | 3.7 V, sized for your runtime |
 | TP4056 charge module | 1 | Solar → battery |
 | Solar panel | 1 | 5–6 V, current depends on battery size |
@@ -19,7 +19,7 @@ Battery-powered garden soil monitor using an **Arduino Nano ESP32**, **15 moistu
 | Resistors 100 kΩ | 2 | Battery voltage divider for A7 |
 
 ### Why multiplexers?
-The Nano ESP32 has **8 analog pins** (A0–A7). Fifteen sensors need a **CD4051 multiplexer** (or I2C ADC modules). This project uses **2× CD4051** sharing analog pin **A0**.
+The Nano ESP32 has **8 analog pins** (A0–A7). Fifteen sensors fit on a single **CD74HC4067 16-channel multiplexer** sharing analog pin **A0**.
 
 ## Wiring
 
@@ -40,31 +40,22 @@ This 2:1 divider keeps A7 below 3.3 V at full charge.
 Each capacitive sensor:
 - **VCC** → 3.3 V (ideally through MOSFET on **D8**)
 - **GND** → GND
-- **AOUT** → CD4051 channel input (Y0–Y7)
+- **AOUT** → CD74HC4067 channel input (Y0–Y14)
 
-### CD4051 #1 (sensors 1–8)
-| CD4051 | Nano ESP32 |
-|--------|------------|
+### CD74HC4067 (sensors 1–15)
+| CD74HC4067 | Nano ESP32 |
+|------------|------------|
 | COM (Z) | A0 |
 | VDD | 3.3 V |
 | VEE | GND |
-| INH | D10 (HIGH = off) |
-| A | D2 |
-| B | D3 |
-| C | D4 |
-| Y0–Y7 | Sensor analog outs 1–8 |
+| EN | D10 (LOW = enabled) |
+| S0 | D2 |
+| S1 | D3 |
+| S2 | D4 |
+| S3 | D5 |
+| Y0–Y14 | Sensor analog outs 1–15 |
 
-### CD4051 #2 (sensors 9–15)
-| CD4051 | Nano ESP32 |
-|--------|------------|
-| COM (Z) | A0 (shared) |
-| INH | D9 |
-| A | D5 |
-| B | D6 |
-| C | D7 |
-| Y0–Y6 | Sensor analog outs 9–15 |
-
-Only **one multiplexer** should be enabled at a time (firmware handles this).
+Only one channel is selected at a time; the firmware handles the address lines.
 
 ## Software setup
 

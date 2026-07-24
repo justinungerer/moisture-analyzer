@@ -4,7 +4,7 @@ Garden Moisture Monitor is an Arduino Nano ESP32 project for tracking soil moist
 
 ## What It Does
 
-The firmware reads 15 capacitive moisture sensors through two CD4051 analog multiplexers, converts raw ADC values into moisture percentages, and publishes those values to a Blynk dashboard. It also measures battery level, supports manual calibration from the app, and sends low-moisture alerts with daily rate limiting.
+The firmware reads 15 capacitive moisture sensors through one CD74HC4067 analog multiplexer, converts raw ADC values into moisture percentages, and publishes those values to a Blynk dashboard. It also measures battery level, supports manual calibration from the app, and sends low-moisture alerts with daily rate limiting.
 
 ## Core Behavior
 

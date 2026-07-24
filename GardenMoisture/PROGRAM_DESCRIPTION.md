@@ -11,7 +11,7 @@ powers the board down between measurement cycles to run from battery and solar.
 
 The firmware is organized around a few clear responsibilities:
 
-1. Read 15 capacitive soil sensors through two CD4051 analog multiplexers, with
+1. Read 15 capacitive soil sensors through one CD74HC4067 analog multiplexer, with
    trimmed-mean filtering to reject noise.
 2. Convert raw ADC readings into moisture percentages using per-zone dry/wet
    calibration values.
@@ -45,7 +45,7 @@ and overwrites the user's settings, pins are split by ownership:
 
 ## Hardware And Data Flow
 
-The board uses one analog input for the soil-sensor bank (through the muxes),
+The board uses one analog input for the soil-sensor bank (through the mux),
 one analog input for battery voltage, and several digital pins to drive the
 multiplexers and the sensor power switch. The sensor reading path is:
 

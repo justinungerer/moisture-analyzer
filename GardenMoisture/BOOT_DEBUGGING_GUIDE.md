@@ -50,7 +50,7 @@ Enable `sensorsBegin()` while still skipping Edgent.
 If crash appears here:
 - sensor init path is culprit
 
-In this project, crash happened during direct-pin sensor init, which was fixed by moving to CD4051 mux-based reading.
+In this project, crash happened during direct-pin sensor init, which was fixed by moving to CD74HC4067 mux-based reading.
 
 ### Step D: Full mode with sleep disabled
 
@@ -63,7 +63,7 @@ Re-enable full app path while keeping deep sleep off:
 Original `sensors.h` used a direct pin array that did not match actual hardware topology.
 
 Hardware is:
-- 2x CD4051 mux
+- 1x CD74HC4067 mux
 - single ADC signal pin (`MUX_SIG_PIN`)
 - channel select + inhibit pins
 
