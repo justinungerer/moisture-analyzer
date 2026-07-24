@@ -4,37 +4,29 @@
 #include "calibration.h"
 #include <Arduino.h>
 
-inline void setMuxChannel(bool useMux2, uint8_t channel) {
-  channel &= 0x07;
+inline void setMuxChannel(uint8_t channel) {
+  channel &= 0x0F;
 
-  digitalWrite(MUX1_INH_PIN, useMux2 ? HIGH : LOW);
-  digitalWrite(MUX2_INH_PIN, useMux2 ? LOW : HIGH);
+  digitalWrite(MUX_S0_PIN, (channel & 0x01) ? HIGH : LOW);
+  digitalWrite(MUX_S1_PIN, (channel & 0x02) ? HIGH : LOW);
+  digitalWrite(MUX_S2_PIN, (channel & 0x04) ? HIGH : LOW);
+  digitalWrite(MUX_S3_PIN, (channel & 0x08) ? HIGH : LOW);
 
-  digitalWrite(MUX1_S0_PIN, (channel & 0x01) ? HIGH : LOW);
-  digitalWrite(MUX1_S1_PIN, (channel & 0x02) ? HIGH : LOW);
-  digitalWrite(MUX1_S2_PIN, (channel & 0x04) ? HIGH : LOW);
-
-  digitalWrite(MUX2_S0_PIN, (channel & 0x01) ? HIGH : LOW);
-  digitalWrite(MUX2_S1_PIN, (channel & 0x02) ? HIGH : LOW);
-  digitalWrite(MUX2_S2_PIN, (channel & 0x04) ? HIGH : LOW);
+  // Active-low enable: pull LOW to connect the selected channel to SIG.
+  digitalWrite(MUX_EN_PIN, LOW);
 }
 
 inline void sensorsBegin() {
   pinMode(MUX_SIG_PIN, INPUT);
 
-  pinMode(MUX1_INH_PIN, OUTPUT);
-  pinMode(MUX1_S0_PIN, OUTPUT);
-  pinMode(MUX1_S1_PIN, OUTPUT);
-  pinMode(MUX1_S2_PIN, OUTPUT);
+  pinMode(MUX_EN_PIN, OUTPUT);
+  pinMode(MUX_S0_PIN, OUTPUT);
+  pinMode(MUX_S1_PIN, OUTPUT);
+  pinMode(MUX_S2_PIN, OUTPUT);
+  pinMode(MUX_S3_PIN, OUTPUT);
 
-  pinMode(MUX2_INH_PIN, OUTPUT);
-  pinMode(MUX2_S0_PIN, OUTPUT);
-  pinMode(MUX2_S1_PIN, OUTPUT);
-  pinMode(MUX2_S2_PIN, OUTPUT);
-
-  // Disable both muxes until a channel is selected.
-  digitalWrite(MUX1_INH_PIN, HIGH);
-  digitalWrite(MUX2_INH_PIN, HIGH);
+  // Disable the mux (active-low enable HIGH) until a channel is selected.
+  digitalWrite(MUX_EN_PIN, HIGH);
 
   // Full 0–3.3 V ADC range with 12-bit resolution.
   analogReadResolution(12);
@@ -82,9 +74,8 @@ inline int readRawMoisture(uint8_t sensorIndex) {
     return 0;
   }
 
-  const bool useMux2 = sensorIndex >= 8;
-  const uint8_t channel = useMux2 ? (sensorIndex - 8) : sensorIndex;
-  setMuxChannel(useMux2, channel);
+  // sensorIndex (0-14) maps directly to a CD74HC4067 channel.
+  setMuxChannel(sensorIndex);
   delay(3);
 
   int samples[SENSOR_SAMPLES];
@@ -93,9 +84,8 @@ inline int readRawMoisture(uint8_t sensorIndex) {
     delay(2);
   }
 
-  // Disable both muxes between reads to reduce channel bleed.
-  digitalWrite(MUX1_INH_PIN, HIGH);
-  digitalWrite(MUX2_INH_PIN, HIGH);
+  // Disable the mux between reads to reduce channel bleed.
+  digitalWrite(MUX_EN_PIN, HIGH);
 
   sortInts(samples, SENSOR_SAMPLES);
 

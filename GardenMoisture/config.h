@@ -73,16 +73,13 @@
 
 #define BLYNK_FIRMWARE_VERSION "1.3.0"
 
-// ── CD4051 multiplexers (2×8 → 15 sensors on A0) ───────────────────────────
-#define MUX_SIG_PIN    A0
-#define MUX1_INH_PIN   D10
-#define MUX1_S0_PIN    D2
-#define MUX1_S1_PIN    D3
-#define MUX1_S2_PIN    D4
-#define MUX2_INH_PIN   D9
-#define MUX2_S0_PIN    D5
-#define MUX2_S1_PIN    D6
-#define MUX2_S2_PIN    D7
+// ── CD74HC4067 multiplexer (16-ch, 15 sensors on A0) ───────────────────────
+#define MUX_SIG_PIN  A0
+#define MUX_EN_PIN   D10   // active-low enable
+#define MUX_S0_PIN   D2
+#define MUX_S1_PIN   D3
+#define MUX_S2_PIN   D4
+#define MUX_S3_PIN   D5
 
 #define SENSOR_POWER_PIN  D8
 #define USE_SENSOR_POWER_SWITCH true
