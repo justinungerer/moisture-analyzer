@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
-const char* kSsid = "Why Not Fie?";
+const char* kSsid = "Why Fie?_2EXT";
 const char* kPassword = "peguinssuck";
 const uint8_t kLedPin = 13;
 
