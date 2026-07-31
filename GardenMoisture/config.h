@@ -62,6 +62,15 @@
 // ── Sensor sampling / filtering ──────────────────────────────────────────────
 #define SENSOR_SAMPLES  12    // raw ADC samples taken per zone read
 #define SENSOR_DISCARD  2     // drop this many highest AND lowest (trimmed mean)
+#define SENSOR_SWEEP_CYCLES_REPORT 3        // full-zone sweeps for normal reports
+#define SENSOR_SWEEP_INTERVAL_MS_REPORT 2000  // pause between report sweeps (ms)
+#define SENSOR_SWEEP_CYCLES_CAL 2           // full-zone sweeps in calibration mode
+#define SENSOR_SWEEP_INTERVAL_MS_CAL 250    // pause between calibration sweeps (ms)
+
+// Firmware smoothing after raw->percent conversion (normal mode only).
+// 0 = hold previous value, 100 = no smoothing.
+#define MOISTURE_SMOOTHING_ENABLED true
+#define MOISTURE_SMOOTHING_ALPHA_PCT 40
 
 // ── Default calibration (capacitive: wet = lower ADC) ────────────────────────
 #define DEFAULT_RAW_DRY  3200
@@ -83,3 +92,10 @@
 
 #define SENSOR_POWER_PIN  D8
 #define USE_SENSOR_POWER_SWITCH true
+
+// Sensor/mux rail power switch control.
+// AO3401 P-MOS high-side switch is typically gate-active-low:
+//   LOW  -> rail ON
+//   HIGH -> rail OFF
+#define SENSOR_POWER_ACTIVE_LOW true
+#define SENSOR_POWER_ON_DELAY_MS 50

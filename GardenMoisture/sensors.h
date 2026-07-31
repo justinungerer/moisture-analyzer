@@ -4,6 +4,14 @@
 #include "calibration.h"
 #include <Arduino.h>
 
+#if SENSOR_POWER_ACTIVE_LOW
+  static constexpr uint8_t SENSOR_PWR_ON_LEVEL  = LOW;
+  static constexpr uint8_t SENSOR_PWR_OFF_LEVEL = HIGH;
+#else
+  static constexpr uint8_t SENSOR_PWR_ON_LEVEL  = HIGH;
+  static constexpr uint8_t SENSOR_PWR_OFF_LEVEL = LOW;
+#endif
+
 inline void setMuxChannel(uint8_t channel) {
   channel &= 0x0F;
 
@@ -37,20 +45,20 @@ inline void sensorsBegin() {
 
 #if USE_SENSOR_POWER_SWITCH
   pinMode(SENSOR_POWER_PIN, OUTPUT);
-  digitalWrite(SENSOR_POWER_PIN, LOW);
+  digitalWrite(SENSOR_POWER_PIN, SENSOR_PWR_OFF_LEVEL);
 #endif
 }
 
 inline void sensorsPowerOn() {
 #if USE_SENSOR_POWER_SWITCH
-  digitalWrite(SENSOR_POWER_PIN, HIGH);
-  delay(50);
+  digitalWrite(SENSOR_POWER_PIN, SENSOR_PWR_ON_LEVEL);
+  delay(SENSOR_POWER_ON_DELAY_MS);
 #endif
 }
 
 inline void sensorsPowerOff() {
 #if USE_SENSOR_POWER_SWITCH
-  digitalWrite(SENSOR_POWER_PIN, LOW);
+  digitalWrite(SENSOR_POWER_PIN, SENSOR_PWR_OFF_LEVEL);
 #endif
 }
 

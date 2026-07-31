@@ -23,7 +23,12 @@ The mobile dashboard assumes these virtual datastreams already exist in your tem
 - V22 capture dry
 - V23 capture wet
 - V24 live raw ADC
-- Optional: V25..V27 diagnostics
+- V25 stay awake (switch)
+- V26 report now (button)
+- V27 selected zone enabled
+- V28 battery voltage (Double, unit V)
+- V29 low-battery threshold
+- V30 diagnostics text
 
 If needed, create datastreams first using [BLYNK_WEB_DASHBOARD_SETUP.md](BLYNK_WEB_DASHBOARD_SETUP.md).
 
@@ -56,6 +61,30 @@ Add widgets in this order.
 - OFF value: 0
 - ON value: 1
 
+5. Styled Switch -> datastream V25
+- Label: Stay awake
+- OFF value: 0
+- ON value: 1
+
+6. Button (Push) -> datastream V26
+- Label: Report now
+- Press value: 1
+- Release value: 0 (if the app asks)
+
+7. Labeled Value -> datastream V28
+- Label: Battery voltage
+- Unit: V
+- Decimals: 2
+
+8. Numeric Input -> datastream V29
+- Label: Low-battery threshold
+- Min: 0
+- Max: 100
+- Step: 1
+
+9. Value/Text widget -> datastream V30
+- Label: Diagnostics
+
 ### B) Zones panel
 
 Create 15 value displays for V0..V14:
@@ -72,22 +101,27 @@ Create 15 value displays for V0..V14:
 - Step: 1
 - Send values on release: On
 
-2. Value display -> datastream V24
+2. Styled Switch -> datastream V27
+- Label: Zone enabled
+- OFF value: 0
+- ON value: 1
+
+3. Value display -> datastream V24
 - Label: Live raw ADC
 
-3. Value display -> datastream V18
+4. Value display -> datastream V18
 - Label: Dry raw
 
-4. Value display -> datastream V19
+5. Value display -> datastream V19
 - Label: Wet raw
 
-5. Button -> datastream V22
+6. Button -> datastream V22
 - Label: Capture dry
 - Mode: Push
 - Press value: 1
 - Release value: 0 (if the app asks)
 
-6. Button -> datastream V23
+7. Button -> datastream V23
 - Label: Capture wet
 - Mode: Push
 - Press value: 1
@@ -95,16 +129,16 @@ Create 15 value displays for V0..V14:
 
 ### D) Optional diagnostics panel
 
-- Value -> V25 (WiFi RSSI, dBm)
-- Value -> V26 (Last report)
-- Value -> V27 (Last error)
+- Value/Text -> V30 (Diagnostics)
 
 ## 4) Mobile reliability notes
 
 1. V21 must be 1..15. Do not use 0..14.
 2. V22/V23 must be Push buttons, not Switch.
-3. If controls seem ignored, the device may be sleeping. Toggle V20 on soon after device wakes.
-4. During calibration sessions, keep the device online long enough to change V21 and use capture buttons.
+3. V26 must be Push button, not a Switch.
+4. V28 must be a decimal-capable display (2 decimals).
+5. If controls seem ignored, the device may be sleeping. Toggle V20 or V25 on soon after device wakes.
+6. During calibration sessions, keep the device online long enough to change V21 and use capture buttons.
 
 ## 5) Quick validation in app
 

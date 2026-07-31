@@ -32,13 +32,19 @@
     { "pin": "V22", "type": "Button", "label": "Capture dry", "mode": "push", "value": 1 },
     { "pin": "V23", "type": "Button", "label": "Capture wet", "mode": "push", "value": 1 },
 
-    { "pin": "V24", "type": "Value", "label": "Live raw ADC" }
+    { "pin": "V24", "type": "Value", "label": "Live raw ADC" },
+
+    { "pin": "V25", "type": "Switch", "label": "Stay awake", "values": "0/1" },
+    { "pin": "V26", "type": "Button", "label": "Report now", "mode": "push", "value": 1 },
+    { "pin": "V27", "type": "Switch", "label": "Zone enabled", "values": "0/1" },
+    { "pin": "V28", "type": "Value", "label": "Battery voltage", "unit": "V", "decimals": 2 },
+    { "pin": "V29", "type": "Slider", "label": "Low-battery threshold", "min": 0, "max": 100, "step": 1 },
+    { "pin": "V30", "type": "Value", "label": "Diagnostics" }
   ],
 
   "diagnostics": [
-    { "pin": "V25", "type": "Value", "label": "WiFi RSSI (dBm)" },
-    { "pin": "V26", "type": "Value", "label": "Last report / uptime" },
-    { "pin": "V27", "type": "Value", "label": "Last error / state" }
+    { "pin": "V28", "type": "Value", "label": "Battery voltage (V)", "decimals": 2 },
+    { "pin": "V30", "type": "Value", "label": "Diagnostics" }
   ],
 
   "notes": "This JSON is a widget mapping you can follow to recreate the dashboard in Blynk Cloud or the mobile app. Blynk Cloud's console may not accept direct JSON imports for widgets — use the mobile app or the Console template editor to add widgets using the entries above. Replace `template_id` with the TMPL ID from your Blynk Console."

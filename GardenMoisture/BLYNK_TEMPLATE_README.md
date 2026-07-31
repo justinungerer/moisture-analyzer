@@ -7,7 +7,7 @@ Quick options to apply these widget settings:
 1) Mobile app (recommended)
    - Open the Blynk IoT mobile app and select your device (or template) dashboard.
    - Tap the + (Add Widget) button and add widgets one-by-one following the `widgets` array in `blynk_template.json`.
-   - Set the widget `Pin` to the V pin listed (eg. `V0`..`V24`) and configure ranges/labels as shown.
+   - Set the widget Pin to the V pin listed (eg. V0..V30) and configure ranges/labels as shown.
 
 2) Blynk Console (web)
    - Sign in at https://blynk.cloud and open your Template or Device dashboard.
@@ -27,6 +27,11 @@ Recommended widgets (summary):
 - V21: Calibration zone (Slider 1..15)
 - V22..V23: Capture dry/wet (Button, Push)
 - V24: Live raw ADC (Value Display)
-- Optional: V25..V27 for diagnostics
+- V25: Stay awake (Switch)
+- V26: Report now (Button, Push)
+- V27: Selected zone enabled (Switch)
+- V28: Battery voltage (Value Display, Double, 2 decimals)
+- V29: Low-battery threshold (Numeric Input)
+- V30: Diagnostics (Text/Value Display)
 
 If you'd like, I can produce a Blynk Console-compatible template JSON (requires the console's exact schema/version). Tell me if you want me to attempt that and I'll pull the current schema.

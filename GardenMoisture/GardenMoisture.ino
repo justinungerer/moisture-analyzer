@@ -56,6 +56,8 @@ static bool reportedThisWake   = false;
 static unsigned long bootMs         = 0;
 static unsigned long connectedAtMs  = 0;
 static unsigned long lastLiveReportMs = 0;
+static bool moistureSmoothingInitialized = false;
+static int smoothedMoisture[SENSOR_COUNT] = {0};
 
 // ── Provisioning helper ──────────────────────────────────────────────────────
 void applyHomeWifiProvisioning() {
@@ -198,10 +200,42 @@ void publishDiagnostics(int battPct) {
 void reportAll() {
   int raw[SENSOR_COUNT];
   int moisture[SENSOR_COUNT];
+  long rawAccum[SENSOR_COUNT] = {0};
+  int rawCycle[SENSOR_COUNT];
 
-  readAllRaw(raw);
+  const bool inCalibration = cal.calMode;
+  const int configuredSweeps = inCalibration ? SENSOR_SWEEP_CYCLES_CAL : SENSOR_SWEEP_CYCLES_REPORT;
+  const int configuredIntervalMs = inCalibration ? SENSOR_SWEEP_INTERVAL_MS_CAL : SENSOR_SWEEP_INTERVAL_MS_REPORT;
+  const int sweeps = (configuredSweeps < 1) ? 1 : configuredSweeps;
+  const int intervalMs = (configuredIntervalMs < 0) ? 0 : configuredIntervalMs;
+
+  for (int sweep = 0; sweep < sweeps; sweep++) {
+    // One full-zone sweep, then optional pause before the next sweep.
+    readAllRaw(rawCycle);
+    for (int i = 0; i < SENSOR_COUNT; i++) {
+      rawAccum[i] += rawCycle[i];
+    }
+    if (sweep < sweeps - 1 && intervalMs > 0) {
+      delay(intervalMs);
+    }
+  }
+
   for (int i = 0; i < SENSOR_COUNT; i++) {
+    raw[i] = (int)(rawAccum[i] / sweeps);
     moisture[i] = rawToPercentForZone(raw[i], cal, i);
+  }
+
+  if (!inCalibration && MOISTURE_SMOOTHING_ENABLED) {
+    const int alphaPct = constrain(MOISTURE_SMOOTHING_ALPHA_PCT, 0, 100);
+    for (int i = 0; i < SENSOR_COUNT; i++) {
+      if (!moistureSmoothingInitialized) {
+        smoothedMoisture[i] = moisture[i];
+      } else {
+        smoothedMoisture[i] = (smoothedMoisture[i] * (100 - alphaPct) + moisture[i] * alphaPct + 50) / 100;
+      }
+      moisture[i] = constrain(smoothedMoisture[i], 0, 100);
+    }
+    moistureSmoothingInitialized = true;
   }
 
   // Moisture gauges always show %, even during calibration.

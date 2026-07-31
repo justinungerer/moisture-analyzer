@@ -39,19 +39,25 @@ Create virtual datastreams exactly as listed:
 | V22 | Capture dry | Integer | 0 | 1 | Cloud -> Device | |
 | V23 | Capture wet | Integer | 0 | 1 | Cloud -> Device | |
 | V24 | Live raw | Integer | 0 | 4095 | Device -> Cloud | |
-| V25 | WiFi RSSI | Integer | -120 | 0 | Device -> Cloud | dBm |
-| V26 | Last report | String | | | Device -> Cloud | |
-| V27 | Last error | String | | | Device -> Cloud | |
+| V25 | Stay awake | Integer | 0 | 1 | Cloud -> Device | |
+| V26 | Report now | Integer | 0 | 1 | Cloud -> Device | |
+| V27 | Zone enabled | Integer | 0 | 1 | Cloud <-> Device | |
+| V28 | Battery voltage | Double | 0 | 5 | Device -> Cloud | V |
+| V29 | Low-battery threshold | Integer | 0 | 100 | Cloud -> Device | % |
+| V30 | Diagnostics | String | | | Device -> Cloud | |
 
 Important:
 - V21 must be min 1 and max 15.
-- V22 and V23 are push buttons that send value 1.
+- V22, V23, and V26 are push buttons that send value 1.
+- V28 must be Double and shown with 2 decimals in the widget.
 
 ## 3) Create event
 
 In Template -> Events, add:
 - Event code: low_moisture
 - Name: Low moisture
+- Event code: low_battery
+- Name: Low battery
 
 ## 4) Build web dashboard sections
 
@@ -59,9 +65,14 @@ Open Template -> Web Dashboard and add widgets in this order.
 
 ### Section A: Overview
 - Gauge -> V15 -> label Battery
+- Value -> V28 -> Battery voltage (show 2 decimals, unit V)
 - Slider -> V17 -> min 0 max 100 step 1
 - Numeric Input (or Step Input) -> V16 -> min 5 max 1440
+- Numeric Input -> V29 -> min 0 max 100 step 1
 - Switch -> V20 -> off 0 on 1
+- Switch -> V25 -> off 0 on 1
+- Button (push) -> V26 sends 1
+- Value/Text -> V30 diagnostics string
 
 ### Section B: Zones
 - 15 Value widgets bound to V0..V14
@@ -70,6 +81,7 @@ Open Template -> Web Dashboard and add widgets in this order.
 
 ### Section C: Calibration
 - Slider -> V21 -> min 1 max 15 step 1
+- Switch -> V27 -> off 0 on 1
 - Value -> V24 (Live raw ADC)
 - Value -> V18 (Dry raw)
 - Value -> V19 (Wet raw)
@@ -77,9 +89,7 @@ Open Template -> Web Dashboard and add widgets in this order.
 - Button (push) -> V23 sends 1
 
 ### Section D: Diagnostics
-- Value -> V25 (WiFi RSSI)
-- Value -> V26 (Last report)
-- Value -> V27 (Last error)
+- Value/Text -> V30 (Diagnostics)
 
 ## 5) Optional quick start
 
@@ -93,6 +103,7 @@ If your account supports JSON import, use blynk_console_template.json as bluepri
 4. V21 slider changes selected calibration zone.
 5. V24 updates for selected zone.
 6. V22 and V23 capture actions trigger updates on V18 and V19.
+7. V28 shows decimal voltage (example 3.84 V, not 3).
 
 ## 7) Mobile app setup
 
