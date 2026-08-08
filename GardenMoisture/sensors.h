@@ -12,6 +12,10 @@
   static constexpr uint8_t SENSOR_PWR_OFF_LEVEL = LOW;
 #endif
 
+#if USE_SENSOR_POWER_SWITCH
+inline bool gSensorPowerSwitchingEnabled = DEFAULT_SENSOR_POWER_SWITCHING_ENABLED;
+#endif
+
 inline void setMuxChannel(uint8_t channel) {
   channel &= 0x0F;
 
@@ -51,6 +55,9 @@ inline void sensorsBegin() {
 
 inline void sensorsPowerOn() {
 #if USE_SENSOR_POWER_SWITCH
+  if (!gSensorPowerSwitchingEnabled) {
+    return;
+  }
   digitalWrite(SENSOR_POWER_PIN, SENSOR_PWR_ON_LEVEL);
   delay(SENSOR_POWER_ON_DELAY_MS);
 #endif
@@ -58,7 +65,31 @@ inline void sensorsPowerOn() {
 
 inline void sensorsPowerOff() {
 #if USE_SENSOR_POWER_SWITCH
+  if (!gSensorPowerSwitchingEnabled) {
+    return;
+  }
   digitalWrite(SENSOR_POWER_PIN, SENSOR_PWR_OFF_LEVEL);
+#endif
+}
+
+inline bool sensorsPowerSwitchingEnabled() {
+#if USE_SENSOR_POWER_SWITCH
+  return gSensorPowerSwitchingEnabled;
+#else
+  return false;
+#endif
+}
+
+inline void sensorsSetPowerSwitching(bool enabled) {
+#if USE_SENSOR_POWER_SWITCH
+  gSensorPowerSwitchingEnabled = enabled;
+  // When switching is disabled, force the rail ON continuously.
+  digitalWrite(SENSOR_POWER_PIN, gSensorPowerSwitchingEnabled ? SENSOR_PWR_OFF_LEVEL : SENSOR_PWR_ON_LEVEL);
+  if (!gSensorPowerSwitchingEnabled && SENSOR_POWER_ON_DELAY_MS > 0) {
+    delay(SENSOR_POWER_ON_DELAY_MS);
+  }
+#else
+  (void)enabled;
 #endif
 }
 
@@ -112,12 +143,15 @@ inline int readRawMoisture(uint8_t sensorIndex) {
 }
 
 inline float readBatteryVoltage() {
-  long sum = 0;
-  for (int i = 0; i < BATTERY_SAMPLES; i++) {
-    sum += analogRead(BATTERY_ADC_PIN);
-    delay(2);
+  // Keep battery reads independent from the switched sensor rail.
+  sensorsPowerOff();
+  if (BATTERY_ADC_SETTLE_MS > 0) {
+    delay(BATTERY_ADC_SETTLE_MS);
   }
-  const float raw  = (float)sum / BATTERY_SAMPLES;
+
+  // On ESP32 ADC, a throwaway read helps charge the sample capacitor.
+  (void)analogRead(BATTERY_ADC_PIN);
+  const float raw  = (float)analogRead(BATTERY_ADC_PIN);
   const float vAdc = (raw / 4095.0f) * 3.3f;
   return vAdc * BATTERY_DIVIDER_RATIO;
 }

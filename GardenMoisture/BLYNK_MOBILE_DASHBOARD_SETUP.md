@@ -29,6 +29,7 @@ The mobile dashboard assumes these virtual datastreams already exist in your tem
 - V28 battery voltage (Double, unit V)
 - V29 low-battery threshold
 - V30 diagnostics text
+- V31 sensor power switching
 
 If needed, create datastreams first using [BLYNK_WEB_DASHBOARD_SETUP.md](BLYNK_WEB_DASHBOARD_SETUP.md).
 
@@ -66,23 +67,28 @@ Add widgets in this order.
 - OFF value: 0
 - ON value: 1
 
-6. Button (Push) -> datastream V26
+6. Styled Switch -> datastream V31
+- Label: Sensor power switching
+- OFF value: 0 (force sensor rail ON)
+- ON value: 1 (toggle sensor rail per read)
+
+7. Button (Push) -> datastream V26
 - Label: Report now
 - Press value: 1
 - Release value: 0 (if the app asks)
 
-7. Labeled Value -> datastream V28
+8. Labeled Value -> datastream V28
 - Label: Battery voltage
 - Unit: V
 - Decimals: 2
 
-8. Numeric Input -> datastream V29
+9. Numeric Input -> datastream V29
 - Label: Low-battery threshold
 - Min: 0
 - Max: 100
 - Step: 1
 
-9. Value/Text widget -> datastream V30
+10. Value/Text widget -> datastream V30
 - Label: Diagnostics
 
 ### B) Zones panel
@@ -147,3 +153,4 @@ Create 15 value displays for V0..V14:
 3. Verify V24 changes for the selected zone.
 4. Tap Capture dry/wet and confirm V18/V19 update.
 5. Turn V20 off and verify normal runtime behavior resumes.
+6. Toggle V31 and confirm rail behavior changes (OFF forces rail ON, ON enables per-read switching).

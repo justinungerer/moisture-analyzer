@@ -33,6 +33,7 @@
 #define VPIN_BATTERY_VOLTAGE  28   // battery voltage (V)                 [↑]
 #define VPIN_LOW_BATT_THRESH  29   // low-battery alert threshold %       [↓]
 #define VPIN_DIAGNOSTICS      30   // status string (uptime/RSSI/heap…)   [↑]
+#define VPIN_PWR_SWITCHING    31   // 1 = toggle sensor rail per read      [↓]
 
 // Blynk Console → Template → Events → create event codes:
 #define BLYNK_EVENT_LOW_MOISTURE "low_moisture"
@@ -56,7 +57,9 @@
 #define BATTERY_DIVIDER_RATIO   2.0f
 #define BATTERY_V_MIN           3.00f
 #define BATTERY_V_MAX           4.20f
-#define BATTERY_SAMPLES         16       // ADC samples averaged per battery read
+#define BATTERY_ADC_SETTLE_MS   40       // settle time before single battery ADC read
+#define BATTERY_SMOOTHING_ENABLED true
+#define BATTERY_SMOOTHING_ALPHA_PCT 25   // 0=hold previous, 100=no smoothing
 #define DEFAULT_LOW_BATT_THRESHOLD 15    // % — alert (once/day) when at or below
 
 // ── Sensor sampling / filtering ──────────────────────────────────────────────
@@ -92,6 +95,7 @@
 
 #define SENSOR_POWER_PIN  D8
 #define USE_SENSOR_POWER_SWITCH true
+#define DEFAULT_SENSOR_POWER_SWITCHING_ENABLED true
 
 // Sensor/mux rail power switch control.
 // AO3401 P-MOS high-side switch is typically gate-active-low:

@@ -47,7 +47,8 @@
       { "pin": "V27", "name": "Zone enabled", "data_type": "integer", "direction": "cloud_and_device", "min": 0, "max": 1 },
       { "pin": "V28", "name": "Battery voltage", "data_type": "double", "direction": "device_to_cloud", "min": 0, "max": 5, "unit": "V" },
       { "pin": "V29", "name": "Low-battery threshold", "data_type": "integer", "direction": "cloud_to_device", "min": 0, "max": 100, "unit": "%" },
-      { "pin": "V30", "name": "Diagnostics", "data_type": "string", "direction": "device_to_cloud" }
+      { "pin": "V30", "name": "Diagnostics", "data_type": "string", "direction": "device_to_cloud" },
+      { "pin": "V31", "name": "Sensor power switching", "data_type": "integer", "direction": "cloud_to_device", "min": 0, "max": 1 }
     ],
     "web_dashboard": {
       "name": "Garden Moisture Web",
@@ -62,6 +63,7 @@
             { "type": "numeric_input", "label": "Low-battery threshold", "pin": "V29", "settings": { "min": 0, "max": 100, "step": 1 } },
             { "type": "switch", "label": "Calibration mode", "pin": "V20", "settings": { "off": 0, "on": 1 } },
             { "type": "switch", "label": "Stay awake", "pin": "V25", "settings": { "off": 0, "on": 1 } },
+            { "type": "switch", "label": "Sensor power switching", "pin": "V31", "settings": { "off": 0, "on": 1 } },
             { "type": "button", "label": "Report now", "pin": "V26", "settings": { "mode": "push", "value": 1 } },
             { "type": "value", "label": "Diagnostics", "pin": "V30" }
           ]

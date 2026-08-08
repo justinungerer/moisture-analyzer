@@ -39,7 +39,8 @@
     { "pin": "V27", "type": "Switch", "label": "Zone enabled", "values": "0/1" },
     { "pin": "V28", "type": "Value", "label": "Battery voltage", "unit": "V", "decimals": 2 },
     { "pin": "V29", "type": "Slider", "label": "Low-battery threshold", "min": 0, "max": 100, "step": 1 },
-    { "pin": "V30", "type": "Value", "label": "Diagnostics" }
+    { "pin": "V30", "type": "Value", "label": "Diagnostics" },
+    { "pin": "V31", "type": "Switch", "label": "Sensor power switching", "values": "0/1" }
   ],
 
   "diagnostics": [

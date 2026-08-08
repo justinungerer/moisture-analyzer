@@ -15,6 +15,7 @@ struct CalibrationSettings {
   uint32_t sleepMinutes;        // deep-sleep interval
   int  selectedZone;            // 0-based zone shown/edited in the app
   bool calMode;                 // calibration mode (device stays awake)
+  bool sensorPowerSwitchingEnabled;  // true=toggled per read, false=always on
   bool provisioned;             // have we seeded widget values up once?
 };
 
@@ -26,6 +27,7 @@ inline void calibrationLoadDefaults(CalibrationSettings& cal) {
   cal.sleepMinutes    = DEFAULT_SLEEP_MINUTES;
   cal.selectedZone    = 0;
   cal.calMode         = false;
+  cal.sensorPowerSwitchingEnabled = DEFAULT_SENSOR_POWER_SWITCHING_ENABLED;
   cal.provisioned     = false;
   for (int i = 0; i < SENSOR_COUNT; i++) {
     cal.rawDry[i]  = DEFAULT_RAW_DRY;
@@ -52,6 +54,7 @@ inline void calibrationLoad(CalibrationSettings& cal) {
   cal.sleepMinutes     = clampSleepMinutes(prefs.getUInt("sleepmin", DEFAULT_SLEEP_MINUTES));
   cal.selectedZone     = constrain(prefs.getInt("zone", 0), 0, SENSOR_COUNT - 1);
   cal.calMode          = prefs.getBool("calmode", false);
+  cal.sensorPowerSwitchingEnabled = prefs.getBool("pwrsw", DEFAULT_SENSOR_POWER_SWITCHING_ENABLED);
   cal.provisioned      = prefs.getBool("prov", false);
 
   for (int i = 0; i < SENSOR_COUNT; i++) {
@@ -77,6 +80,7 @@ inline void calibrationSave(const CalibrationSettings& cal) {
   prefs.putUInt("sleepmin", cal.sleepMinutes);
   prefs.putInt("zone", cal.selectedZone);
   prefs.putBool("calmode", cal.calMode);
+  prefs.putBool("pwrsw", cal.sensorPowerSwitchingEnabled);
   prefs.putBool("prov", cal.provisioned);
 
   for (int i = 0; i < SENSOR_COUNT; i++) {

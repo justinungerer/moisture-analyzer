@@ -47,6 +47,7 @@ DATASTREAMS.extend(
         ("Battery Voltage", "V28", "Double", "0", "5", "0", "V", "Off", "Telemetry; show 2 decimals"),
         ("Low-Battery Threshold", "V29", "Integer", "0", "100", "15", "%", "On", "Global setting"),
         ("Diagnostics", "V30", "String", "—", "—", "", "", "Off", "Telemetry text"),
+        ("Sensor Power Switching", "V31", "Integer", "0", "1", "1", "", "On", "Global setting; 1=toggle rail, 0=force ON"),
     ]
 )
 
@@ -58,6 +59,7 @@ WEB_WIDGETS = [
     ("Overview", "Numeric Input", "Moisture Alert Threshold", "V17", "Min 0, max 100, step 1"),
     ("Overview", "Numeric Input", "Low-Battery Threshold", "V29", "Min 0, max 100, step 1"),
     ("Overview", "Switch", "Stay Awake", "V25", "OFF=0, ON=1"),
+    ("Overview", "Switch", "Sensor Power Switching", "V31", "OFF=0 (force ON), ON=1 (toggle per read)"),
     ("Overview", "Button", "Report Now", "V26", "Mode Push/Momentary; OFF=0, ON=1"),
     ("Overview", "Label", "Diagnostics", "V30", "Wide widget; allow text wrapping"),
     ("Moisture", "15 Gauges", "Zone 01–15 Moisture", "V0–V14", "One gauge per zone; 0–100%"),
@@ -81,6 +83,7 @@ MOBILE_WIDGETS = [
     ("Overview", "Numeric Input", "Moisture Alert Threshold", "V17", "0–100, step 1"),
     ("Overview", "Numeric Input", "Low-Battery Threshold", "V29", "0–100, step 1"),
     ("Overview", "Switch", "Stay Awake", "V25", "OFF=0, ON=1"),
+    ("Overview", "Switch", "Sensor Power Switching", "V31", "OFF=0 (force ON), ON=1 (toggle per read)"),
     ("Overview", "Button", "Report Now", "V26", "Mode Push; OFF=0, ON=1"),
     ("Overview", "Labeled Value", "Diagnostics", "V30", "Use a wide widget"),
     ("Zones 1–8", "Gauge", "Zone 01–08 Moisture", "V0–V7", "One gauge per zone"),
@@ -206,7 +209,7 @@ summary.cell(1, 1).text = "TMPL2c6XdcWxv"
 summary.cell(2, 0).text = "Firmware"
 summary.cell(2, 1).text = "Garden Moisture Monitor v1.3.0"
 summary.cell(3, 0).text = "Virtual pins"
-summary.cell(3, 1).text = "V0 through V30"
+summary.cell(3, 1).text = "V0 through V31"
 document.add_paragraph()
 
 add_note(

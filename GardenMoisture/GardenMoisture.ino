@@ -20,10 +20,11 @@
     V28     battery voltage (V)                (device → app)
     V29     low-battery threshold %            (app → device)
     V30     diagnostics string                 (device → app)
+    V31     sensor power switching             (app → device)
 
   Blynk events (Template → Events): low_moisture, low_battery
 
-  Sync model: setting pins (V16/17/20/21/27/29/25) are pulled DOWN with
+  Sync model: setting pins (V16/17/20/21/27/29/25/31) are pulled DOWN with
   Blynk.syncVirtual() on connect so the app is the source of truth. The
   device only writes telemetry UP. Settings are seeded up exactly once
   (provisioned flag) so widgets show correct initial values without ever
@@ -58,6 +59,8 @@ static unsigned long connectedAtMs  = 0;
 static unsigned long lastLiveReportMs = 0;
 static bool moistureSmoothingInitialized = false;
 static int smoothedMoisture[SENSOR_COUNT] = {0};
+static bool batterySmoothingInitialized = false;
+static float smoothedBatteryVoltage = 0.0f;
 
 // ── Provisioning helper ──────────────────────────────────────────────────────
 void applyHomeWifiProvisioning() {
@@ -116,6 +119,7 @@ void seedSettingsToApp() {
   Blynk.virtualWrite(VPIN_CAL_ZONE, cal.selectedZone + 1);
   Blynk.virtualWrite(VPIN_LOW_BATT_THRESH, cal.lowBattThreshold);
   Blynk.virtualWrite(VPIN_STAY_AWAKE, stayAwake ? 1 : 0);
+  Blynk.virtualWrite(VPIN_PWR_SWITCHING, cal.sensorPowerSwitchingEnabled ? 1 : 0);
   pushZoneDisplay();
 }
 
@@ -126,7 +130,8 @@ void seedSettingsToApp() {
 // values and a sync-down would be ambiguous (and would clobber the display).
 void syncSettingsFromApp() {
   Blynk.syncVirtual(VPIN_SLEEP_MINUTES, VPIN_ALERT_THRESHOLD, VPIN_CAL_MODE,
-                    VPIN_CAL_ZONE, VPIN_LOW_BATT_THRESH, VPIN_STAY_AWAKE);
+                    VPIN_CAL_ZONE, VPIN_LOW_BATT_THRESH, VPIN_STAY_AWAKE,
+                    VPIN_PWR_SWITCHING);
 }
 
 // ── Calibration capture ──────────────────────────────────────────────────────
@@ -243,7 +248,18 @@ void reportAll() {
     Blynk.virtualWrite(i, moisture[i]);
   }
 
-  const float vBat  = readBatteryVoltage();
+  const float vBatInstant = readBatteryVoltage();
+  float vBat = vBatInstant;
+  if (BATTERY_SMOOTHING_ENABLED) {
+    const int alphaPct = constrain(BATTERY_SMOOTHING_ALPHA_PCT, 0, 100);
+    if (!batterySmoothingInitialized) {
+      smoothedBatteryVoltage = vBatInstant;
+      batterySmoothingInitialized = true;
+    } else {
+      smoothedBatteryVoltage = (smoothedBatteryVoltage * (100 - alphaPct) + vBatInstant * alphaPct) / 100.0f;
+    }
+    vBat = smoothedBatteryVoltage;
+  }
   const int battPct = batteryPercentFromVoltage(vBat);
   Blynk.virtualWrite(VPIN_BATTERY, battPct);
   Blynk.virtualWrite(VPIN_BATTERY_VOLTAGE, vBat);
@@ -361,6 +377,18 @@ BLYNK_WRITE(25) {  // VPIN_STAY_AWAKE
   }
 }
 
+BLYNK_WRITE(31) {  // VPIN_PWR_SWITCHING
+  const bool enabled = param.asInt() != 0;
+  if (enabled != cal.sensorPowerSwitchingEnabled) {
+    cal.sensorPowerSwitchingEnabled = enabled;
+    settingPutBool("pwrsw", cal.sensorPowerSwitchingEnabled);
+    sensorsSetPowerSwitching(cal.sensorPowerSwitchingEnabled);
+    Serial.println(cal.sensorPowerSwitchingEnabled
+      ? F("Sensor power switching ON (rail toggled per read)")
+      : F("Sensor power switching OFF (rail forced ON)"));
+  }
+}
+
 BLYNK_WRITE(21) {  // VPIN_CAL_ZONE
   const int z = zoneIndexFromPin(param.asLong());
   if (z != cal.selectedZone) {
@@ -443,6 +471,7 @@ void setup() {
   alertsLoadFromFlash();
 
   sensorsBegin();  // sets ADC resolution + attenuation, mux pins, power switch
+  sensorsSetPowerSwitching(cal.sensorPowerSwitchingEnabled);
 
   applyHomeWifiProvisioning();
   BlynkEdgent.begin();

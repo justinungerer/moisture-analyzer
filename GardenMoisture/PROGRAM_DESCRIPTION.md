@@ -30,9 +30,10 @@ server. To avoid the classic bug where the device pushes its own defaults up
 and overwrites the user's settings, pins are split by ownership:
 
 - **Global settings (app-owned):** V16 sleep, V17 alert threshold, V20 cal
-  mode, V21 zone select, V25 stay-awake, V29 low-battery threshold. On connect
-  these are pulled *down* with `Blynk.syncVirtual()`. The device never writes
-  them up during normal operation.
+   mode, V21 zone select, V25 stay-awake, V29 low-battery threshold, V31 sensor
+   power switching. On connect these are pulled *down* with
+   `Blynk.syncVirtual()`. The device never writes them up during normal
+   operation.
 - **Telemetry (device-owned):** V0–V15, V24, V28, V30. Always written *up*.
 - **Per-zone values (device-owned, edited live):** V18/V19 raw calibration and
   V27 enable. One widget maps to 15 backing values depending on the selected
@@ -176,6 +177,7 @@ if the cloud never connected — the critical battery-drain guard.
 | `BLYNK_WRITE(29)` | V29 | Low-battery threshold %, persisted |
 | `BLYNK_WRITE(20)` | V20 | Calibration mode on/off, persisted |
 | `BLYNK_WRITE(25)` | V25 | Stay-awake switch (session) |
+| `BLYNK_WRITE(31)` | V31 | Sensor power switching on/off, persisted |
 | `BLYNK_WRITE(21)` | V21 | Selected calibration zone, persisted |
 | `BLYNK_WRITE(27)` | V27 | Enable/disable the selected zone, persisted |
 | `BLYNK_WRITE(18)` / `(19)` | V18/V19 | Manual dry/wet raw edit for selected zone |
@@ -196,7 +198,8 @@ control sensor power, and read zones one at a time. Each zone is sampled
 `SENSOR_SAMPLES` times; the highest and lowest `SENSOR_DISCARD` samples are
 dropped and the rest averaged (trimmed mean). Mux outputs are disabled between
 reads to reduce channel bleed. Battery voltage is averaged over
-`BATTERY_SAMPLES` reads and converted through a piecewise Li-ion curve.
+one settled ADC read per report (with an initial throwaway conversion) and
+converted through a piecewise Li-ion curve.
 
 ### Calibration / settings helpers (`calibration.h`)
 
@@ -245,12 +248,13 @@ on the same local day are suppressed.
 | V28 | device → app | Battery voltage (V) |
 | V29 | app → device | Low-battery threshold % |
 | V30 | device → app | Diagnostics string |
+| V31 | app → device | Sensor power switching (1=toggled, 0=forced ON) |
 
 ### Required Blynk Console setup
 
 Create datastreams V25 (int 0/1), V26 (int 0/1), V27 (int 0/1), V28 (double, V),
-V29 (int 0–100), and V30 (string), and create event codes `low_moisture` and
-`low_battery`. V0–V24 are unchanged from earlier versions.
+V29 (int 0–100), V30 (string), and V31 (int 0/1), and create event codes
+`low_moisture` and `low_battery`. V0–V24 are unchanged from earlier versions.
 
 ## Key Configuration Constants (`config.h`)
 
@@ -261,7 +265,8 @@ V29 (int 0–100), and V30 (string), and create event codes `low_moisture` and
 | `MAX_AWAKE_MS` | 120000 | Absolute cap; forces sleep even if never connected |
 | `LIVE_REPORT_INTERVAL_MS` | 10000 | Re-report cadence while staying awake |
 | `SENSOR_SAMPLES` / `SENSOR_DISCARD` | 12 / 2 | Trimmed-mean filtering |
-| `BATTERY_SAMPLES` | 16 | Battery ADC averaging |
+| `BATTERY_ADC_SETTLE_MS` | 40 | Delay before single battery ADC read |
+| `BATTERY_SMOOTHING_ENABLED` / `BATTERY_SMOOTHING_ALPHA_PCT` | true / 25 | Cross-report battery smoothing |
 | `DEFAULT_ALERT_THRESHOLD` | 25 | Low-moisture % |
 | `DEFAULT_LOW_BATT_THRESHOLD` | 15 | Low-battery % |
 

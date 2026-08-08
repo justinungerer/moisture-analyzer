@@ -45,11 +45,13 @@ Create virtual datastreams exactly as listed:
 | V28 | Battery voltage | Double | 0 | 5 | Device -> Cloud | V |
 | V29 | Low-battery threshold | Integer | 0 | 100 | Cloud -> Device | % |
 | V30 | Diagnostics | String | | | Device -> Cloud | |
+| V31 | Sensor power switching | Integer | 0 | 1 | Cloud -> Device | |
 
 Important:
 - V21 must be min 1 and max 15.
 - V22, V23, and V26 are push buttons that send value 1.
 - V28 must be Double and shown with 2 decimals in the widget.
+- V31 is a switch: 1 = sensor rail toggles per read, 0 = sensor rail forced ON.
 
 ## 3) Create event
 
@@ -71,6 +73,7 @@ Open Template -> Web Dashboard and add widgets in this order.
 - Numeric Input -> V29 -> min 0 max 100 step 1
 - Switch -> V20 -> off 0 on 1
 - Switch -> V25 -> off 0 on 1
+- Switch -> V31 -> off 0 on 1 (label Sensor power switching)
 - Button (push) -> V26 sends 1
 - Value/Text -> V30 diagnostics string
 
@@ -104,6 +107,7 @@ If your account supports JSON import, use blynk_console_template.json as bluepri
 5. V24 updates for selected zone.
 6. V22 and V23 capture actions trigger updates on V18 and V19.
 7. V28 shows decimal voltage (example 3.84 V, not 3).
+8. V31 toggles sensor power behavior: ON=per-read switching, OFF=rail forced ON.
 
 ## 7) Mobile app setup
 
