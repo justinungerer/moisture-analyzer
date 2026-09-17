@@ -54,7 +54,9 @@
 
 // 10000 mAh Li-ion (3.0 V cutoff → 4.2 V full)
 #define BATTERY_ADC_PIN         A7
-#define BATTERY_DIVIDER_RATIO   2.0f
+// Empirically calibrated: 100k/100k divider under real ESP32 ADC loading
+// reads ~2.77:1, not the ideal 2.0:1 (measured 3.6 V terminal vs 1.3 V node).
+#define BATTERY_DIVIDER_RATIO   2.77f
 #define BATTERY_V_MIN           3.00f
 #define BATTERY_V_MAX           4.20f
 #define BATTERY_ADC_SETTLE_MS   40       // settle time before single battery ADC read

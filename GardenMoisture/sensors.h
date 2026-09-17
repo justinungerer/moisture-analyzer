@@ -143,16 +143,29 @@ inline int readRawMoisture(uint8_t sensorIndex) {
 }
 
 inline float readBatteryVoltage() {
-  // Keep battery reads independent from the switched sensor rail.
-  sensorsPowerOff();
+  // Battery divider is fed from the switched sensor rail (hardware constraint),
+  // not directly off the battery, so it must be powered to read a real value.
+  sensorsPowerOn();
   if (BATTERY_ADC_SETTLE_MS > 0) {
     delay(BATTERY_ADC_SETTLE_MS);
   }
 
-  // On ESP32 ADC, a throwaway read helps charge the sample capacitor.
-  (void)analogRead(BATTERY_ADC_PIN);
-  const float raw  = (float)analogRead(BATTERY_ADC_PIN);
+  // High divider source impedance under-charges the ADC sample cap on a
+  // single shot; repeated back-to-back reads converge closer to the real value.
+  const int totalReads = 12;
+  const int discard = 6;
+  long sum = 0;
+  for (int i = 0; i < totalReads; i++) {
+    const int r = analogRead(BATTERY_ADC_PIN);
+    if (i >= discard) {
+      sum += r;
+    }
+    delay(3);
+  }
+  const float raw  = (float)sum / (totalReads - discard);
   const float vAdc = (raw / 4095.0f) * 3.3f;
+
+  sensorsPowerOff();
   return vAdc * BATTERY_DIVIDER_RATIO;
 }
 
